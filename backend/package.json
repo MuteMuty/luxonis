@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "scrape": "ts-node ./scrape.ts"
+    "api": "ts-node ./scrape.ts && ts-node ./serve.ts"
   },
   "dependencies": {
     "express": "^4.18.2",
