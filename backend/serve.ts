@@ -1,8 +1,12 @@
 import { pool } from './my_pool';
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 
 const app = express();
 const port = 4000;
+
+// Enable CORS
+app.use(cors());
 
 app.get('/', async (req: Request, res: Response) => {
   try {
