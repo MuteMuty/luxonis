@@ -57,29 +57,32 @@ async function saveDataToDatabase(items: any[]) {
 }
 
 async function scrapeSReality(numberOfPages: number) {
-  const browser = await puppeteer.launch(); // Launch a new browser instance
+  const browser = await puppeteer.launch({
+    executablePath: '/usr/bin/google-chrome-stable',
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  }); // Launch a new browser instance
   const page = await browser.newPage(); // Create a new page
 
   for (let pageNumber = 1; pageNumber <= numberOfPages; pageNumber++) {
     await page.goto(`https://www.sreality.cz/en/search/for-sale/apartments?page=${pageNumber}`); // Navigate to the target website
     await page.waitForSelector('div.property'); // Wait for the relevant elements to be loaded
-  
+
     const items = await page.evaluate(() => {
       // Extract the required data from the page using JavaScript in the browser context
       const elements = Array.from(document.querySelectorAll('div.property'));
-  
+
       return elements.map((element: any) => {
         const title = element.querySelector('span.name').innerText;
         const location = element.querySelector('span.locality').innerText;
         const price = element.querySelector('span.price').innerText;
         const imageUrl = Array.from(element.querySelectorAll('a img')).map((img: any) => img.src.replace("400,300", "749,562")).filter(link => link.endsWith("jpg,90"));
-  
+
         return { title, location, price, imageUrl };
       });
     });
-  
+
     // console.log(items); // Output the scraped data for testing purposes
-  
+
     await saveDataToDatabase(items); // Save the scraped data to the database
   }
 
@@ -88,9 +91,9 @@ async function scrapeSReality(numberOfPages: number) {
 
 createDatabase();
 scrapeSReality(25)
-.then(() => {
-  console.log(`Scraping data complete!`);
-})
-.catch((error) => {
-  console.error('An error occurred:', error);
-});
+  .then(() => {
+    console.log(`Scraping data complete!`);
+  })
+  .catch((error) => {
+    console.error('An error occurred:', error);
+  });
