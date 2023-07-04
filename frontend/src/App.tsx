@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from './components/Pagination';
+import ListingDetails from './components/ListingDetails';
+import LoadingSpinner from './components/LoadingSpinner';
+import './App.css';
 
 interface Apartment {
   id: number;
@@ -18,6 +21,7 @@ const App: React.FC = () => {
   const currentPage = parseInt(queryParams.get('page') || '1');
   const [apartments, setApartments] = useState<Apartment[]>([]);
   const [totalPages] = useState(50);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +30,9 @@ const App: React.FC = () => {
         const { data } = response;
         console.log(data);
         setApartments(data);
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(true);
         console.error('Error fetching data:', error);
       }
     };
@@ -36,23 +42,27 @@ const App: React.FC = () => {
 
   const handlePageChange = (page: number) => {
     navigate(`/?page=${page}`);
+    window.scrollTo(0, 0);
   };
 
   return (
     <div className="App">
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       {apartments.map((apartment) => (
-        <div key={apartment.id}>
-          <h2>{apartment.title}</h2>
-          <p>{apartment.location}</p>
-          <p>{apartment.price}</p>
-          <div>
-            {apartment.image_url.map((imageUrl, index) => (
-              <img key={index} src={imageUrl} alt={`Image ${index}`} />
-            ))}
-          </div>
+        <div>
+          {isLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <ListingDetails
+              title={apartment.title}
+              location={apartment.location}
+              price={apartment.price}
+              image_url={apartment.image_url}
+            />
+          )}
         </div>
       ))}
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
     </div>
   );
 };
