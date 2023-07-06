@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { IconContext } from "react-icons";
+import { FiSun, FiMoon } from 'react-icons/fi';
 import axios from 'axios';
 import Pagination from './components/Pagination';
 import ListingDetails from './components/ListingDetails';
@@ -22,6 +24,7 @@ const App: React.FC = () => {
   const [apartments, setApartments] = useState<Apartment[]>([]);
   const [totalPages] = useState(50);
   const [isLoading, setIsLoading] = useState(true);
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +37,9 @@ const App: React.FC = () => {
       } catch (error) {
         setIsLoading(true);
         console.error('Error fetching data:', error);
+        setTimeout(() => {
+          fetchData(); // Retry fetching data after 10 seconds, backend not working yet
+        }, 10000);
       }
     };
 
@@ -46,22 +52,32 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${theme}`}>
+      <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+        {theme === 'light' ? <IconContext.Provider value={{ color: "#222" }}>
+          <div>
+            <FiMoon />
+          </div>
+        </IconContext.Provider> : <IconContext.Provider value={{ color: "#f8f8f8" }}>
+          <div>
+            <FiSun />
+          </div>
+        </IconContext.Provider>}
+      </button>
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-      {apartments.map((apartment) => (
-        <div>
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <ListingDetails
-              title={apartment.title}
-              location={apartment.location}
-              price={apartment.price}
-              image_url={apartment.image_url}
-            />
-          )}
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (apartments.map((apartment, index) => (
+        <div key={apartment.id}>
+          <ListingDetails
+            title={apartment.title}
+            location={apartment.location}
+            price={apartment.price}
+            image_url={apartment.image_url}
+          />
+          {index !== apartments.length - 1 && <div className="divider"></div>}
         </div>
-      ))}
+      )))}
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
     </div>
   );

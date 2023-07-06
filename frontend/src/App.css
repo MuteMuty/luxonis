@@ -1,8 +1,46 @@
 .app {
-  background: linear-gradient(to bottom, #f8f8f8, #ebebeb);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+}
+
+.divider {
+  height: 1px;
+  background-color: #ccc;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.App.light {
+  background: linear-gradient(to bottom, #f8f8f8, #ebebeb);
+  color: #222;
+}
+
+.App.dark {
+  background: linear-gradient(to bottom, #222, #444);
+  color: #f8f8f8;
+}
+
+.App.dark h2 {
+  color: #f8f8f8;
+}
+
+.App.dark p {
+  color: #ebebeb;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #000;
 }

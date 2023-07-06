@@ -58,13 +58,18 @@ async function saveDataToDatabase(items: any[]) {
 
 async function scrapeSReality(numberOfPages: number) {
   const browser = await puppeteer.launch({
+    headless: 'new',
     executablePath: '/usr/bin/google-chrome-stable',
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   }); // Launch a new browser instance
   const page = await browser.newPage(); // Create a new page
 
   for (let pageNumber = 1; pageNumber <= numberOfPages; pageNumber++) {
-    await page.goto(`https://www.sreality.cz/en/search/for-sale/apartments?page=${pageNumber}`); // Navigate to the target website
+    await page.goto(`https://www.sreality.cz/en/search/for-sale/apartments?page=${pageNumber}`, {
+      waitUntil: 'load',
+      // Remove the timeout
+      timeout: 0
+    }); // Navigate to the target website
     await page.waitForSelector('div.property'); // Wait for the relevant elements to be loaded
 
     const items = await page.evaluate(() => {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { isMobile } from 'react-device-detect';
 import './Pagination.css';
 
 interface PaginationProps {
@@ -12,7 +13,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
   const createPaginationLinks = () => {
     const links = [];
 
-    const maxVisibleLinks = 8;
+    const maxVisibleLinks = isMobile ? 7 : 10;
     const halfVisibleLinks = Math.floor(maxVisibleLinks / 2);
     let startPage = currentPage - halfVisibleLinks;
     let endPage = currentPage + halfVisibleLinks;
@@ -27,7 +28,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       startPage = Math.max(1, endPage - maxVisibleLinks + 1);
     }
 
-    if (startPage > 1) {
+    if (startPage > 1 && !isMobile) {
       links.push(
         <Link key={1} to={`/?page=${1}`} onClick={() => onPageChange(1)}>
           First
@@ -50,7 +51,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       );
     }
 
-    if (endPage < totalPages) {
+    if (endPage < totalPages && !isMobile) {
       links.push(
         <Link key="next" to={`/?page=${currentPage + 1}`} onClick={() => onPageChange(currentPage + 1)}>
           Next

@@ -15,11 +15,11 @@
     animation: spin 1s linear infinite;
 }
 
-.text {
+p {
     margin-top: 20px;
     font-size: 18px;
     font-weight: bold;
-    color: #333;
+    color: #222;
 }
 
 @keyframes spin {

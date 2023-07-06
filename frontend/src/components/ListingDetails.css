@@ -9,16 +9,18 @@
     width: 100%;
     text-align: center;
     margin-bottom: 1rem;
+    font-weight: bold;
+    color: #333;
 }
 
 .title-location-price h2 {
     font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.1rem;
 }
 
 .title-location-price p {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
 }
 
 .carousel-container {
